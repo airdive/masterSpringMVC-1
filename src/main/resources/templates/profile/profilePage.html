@@ -10,23 +10,24 @@
     <h2 class="indigo-text center">Personal info</h2>
     <!--/*@thymesVar id="profileForm" type="masterSpringMvc.profile.ProfileForm"*/-->
     <form th:action="@{/profile}" th:object="${profileForm}" method="post" class="col m8 s12 offset-m2">
-        <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
-            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-        </ul>
         <div class="row">
             <div class="input-field col s6">
-                <input th:field="${profileForm.twitterHandle}" id="twitterHandle" type="text"/>
+                <input th:field="${profileForm.twitterHandle}" id="twitterHandle" type="text" th:errorclass="invalid"/>
                 <label for="twitterHandle">Last Name</label>
+                <div th:errors="*{twitterHandle}" class="red-text">Error</div>
             </div>
             <div class="input-field col s6">
-                <input th:field="${profileForm.email}" id="email" type="text"/>
+                <input th:field="${profileForm.email}" id="email" type="text" th:errorclass="invalid"/>
                 <label for="email">Email</label>
+                <div th:errors="*{email}" class="red-text">Error</div>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s6">
-                <input th:field="${profileForm.birthDate}" id="birthDate" type="text" th:placeholder="${dateFormat}"/>
+                <input th:field="${profileForm.birthDate}" id="birthDate" type="text" th:placeholder="${dateFormat}"
+                       th:errorclass="invalid"/>
                 <label for="birthDate">Birth Date</label>
+                <div th:errors="*{birthDate}" class="red-text">Error</div>
             </div>
         </div>
         <div class="row s12">
