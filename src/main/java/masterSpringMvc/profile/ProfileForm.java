@@ -1,5 +1,6 @@
 package masterSpringMvc.profile;
 
+import masterSpringMvc.date.PastLocalDate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -20,6 +21,7 @@ public class ProfileForm {
 
 
     @NotNull
+    @PastLocalDate
     private LocalDate birthDate;
 
     @NotEmpty
