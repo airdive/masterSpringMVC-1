@@ -13,7 +13,7 @@
         <div class="row">
             <div class="input-field col s6">
                 <input th:field="${profileForm.twitterHandle}" id="twitterHandle" type="text" th:errorclass="invalid"/>
-                <label for="twitterHandle" th:text="#{twitter. handle}">Twitter handle</label>
+                <label for="twitterHandle" th:text="#{twitter.handle}">Twitter handle</label>
                 <div th:errors="*{twitterHandle}" class="red-text">Error</div>
             </div>
             <div class="input-field col s6">
@@ -29,6 +29,27 @@
                 <div th:errors="*{birthDate}" class="red-text">Error</div>
             </div>
         </div>
+        <fieldset class="row">
+            <legend th:text="#{tastes.legend}">What do you like?</legend>
+            <button class="btn teal" type="submit" name="addTaste"
+                    th:text="#{add.taste}">Add taste
+                <i class="mdi-content-add left"></i>
+            </button>
+            <div th:errors="*{tastes}" class="red-text">Error</div>
+            <div class="row" th:each="row,rowStat : *{tastes}">
+                <div class="col s6">
+                    <input type="text" th:field="*{tastes[__${rowStat.index}__]}"
+                           th:placeholder="#{taste.placeholder}"/>
+                </div>
+                <div class="col s6">
+                    <button class="btn red" type="submit" name="removeTaste" th:value="${rowStat.index}"
+                            th:text="#{remove}">
+                        Remove
+                        <i class="mdi-action-delete right waves-effect"></i>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
         <div class="row s12">
             <button class="btn waves-effect waves-light" type="submit" name="save">Submit
                 <i class="mdi-content-send right"></i>
