@@ -13,20 +13,19 @@
         <div class="row">
             <div class="input-field col s6">
                 <input th:field="${profileForm.twitterHandle}" id="twitterHandle" type="text" th:errorclass="invalid"/>
-                <label for="twitterHandle">Last Name</label>
+                <label for="twitterHandle" th:text="#{twitter. handle}">Twitter handle</label>
                 <div th:errors="*{twitterHandle}" class="red-text">Error</div>
             </div>
             <div class="input-field col s6">
                 <input th:field="${profileForm.email}" id="email" type="text" th:errorclass="invalid"/>
-                <label for="email">Email</label>
+                <label for="email" th:text="#{email}">Email</label>
                 <div th:errors="*{email}" class="red-text">Error</div>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s6">
-                <input th:field="${profileForm.birthDate}" id="birthDate" type="text" th:placeholder="${dateFormat}"
-                       th:errorclass="invalid"/>
-                <label for="birthDate">Birth Date</label>
+                <input th:field="${profileForm.birthDate}" id="birthDate" type="text" th:errorclass="invalid"/>
+                <label for="birthDate" th:text="#{birthdate}" th:placeholder="${dateFormat}">Birth Date</label>
                 <div th:errors="*{birthDate}" class="red-text">Error</div>
             </div>
         </div>
