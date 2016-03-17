@@ -15,6 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Controller
@@ -57,14 +59,17 @@ public class PictureUploadController {
              OutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
-        return tempFile;
+        return pictureDir;
     }
 
     @RequestMapping(value = "/uploadedPicture")
     public void getUploadedPicture(HttpServletResponse response,
-                                   @ModelAttribute("picturePath")Path picturePath) throws IOException {
-        response.setHeader("Content-Type", sun.net.www.URLConnection.guessContentTypeFromName(anonymousPicture.getFilename()));
-        IOUtils.copy(anonymousPicture.getInputStream(), response.getOutputStream());
+                                   @ModelAttribute("picturePath") Path picturePath) throws IOException {
+        response.setHeader(
+                "Content-Type",
+                URLConnection.guessContentTypeFromName(picturePath.toString())
+        );
+        Files.copy(picturePath, response.getOutputStream());
     }
 
     private boolean isImage(MultipartFile file) {
@@ -76,7 +81,7 @@ public class PictureUploadController {
     }
 
     @ModelAttribute("picturePath")
-    public Resource picturePath(){
+    public Resource picturePath() {
         return anonymousPicture;
     }
 }
