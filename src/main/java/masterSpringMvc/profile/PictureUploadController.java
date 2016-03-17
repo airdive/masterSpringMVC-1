@@ -45,18 +45,19 @@ public class PictureUploadController {
 
         Resource picturePath = copyFileToPictures(file);
         model.addAttribute("picturePath", picturePath);
-        File tempFile = copyFileToPictures(file);
 
+
+        return "profile/uploadPage";
+    }
+
+    private Resource copyFileToPictures(MultipartFile file) throws IOException {
+        String filename = file.getOriginalFilename();
+        File tempFile = File.createTempFile("pic", getFileExtension(filename), pictureDir.getFile());
         try (InputStream in = file.getInputStream();
              OutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
-        return "profile/uploadPage";
-    }
-
-    private File copyFileToPictures(MultipartFile file) throws IOException {
-        String filename = file.getOriginalFilename();
-        return File.createTempFile("pic", getFileExtension(filename), pictureDir.getFile());
+        return tempFile;
     }
 
     @RequestMapping(value = "/uploadedPicture")
