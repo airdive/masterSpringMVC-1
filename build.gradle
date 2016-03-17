@@ -8,6 +8,7 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
+		classpath("org.springframework.boot:spring-boot-configuration-processor")
 	}
 }
 
@@ -35,6 +36,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-social-twitter'
 	compile 'org.webjars:materializecss:0.96.0'
 	compile 'org.webjars:jquery:2.1.4'
+	optional "org.springframework.boot:spring-boot-configuration-processor"
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
@@ -49,3 +51,4 @@ eclipse {
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.9'
 }
+compileJava.dependsOn(processResources)
