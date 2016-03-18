@@ -1,6 +1,7 @@
 package masterSpringMvc.profile;
 
 import masterSpringMvc.date.USLocalDateFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,19 +15,31 @@ import java.util.Locale;
 @Controller
 public class ProfileController {
 
+    private UserProfileSession userProfileSession;
+
+    @Autowired
+    public ProfileController(UserProfileSession userProfileSession) {
+        this.userProfileSession = userProfileSession;
+    }
+
+    @ModelAttribute
+    public ProfileForm getProfileForm() {
+        return userProfileSession.toForm();
+    }
+
     @RequestMapping("/profile")
-    public String displayProfile(ProfileForm profileForm) {
+    public String displayProfile() {
         return "profile/profilePage";
     }
 
-    @RequestMapping(value = "/profile",params = {"save"} ,method = RequestMethod.POST)
+    @RequestMapping(value = "/profile", params = {"save"}, method = RequestMethod.POST)
     public String saveProfile(@Valid ProfileForm profileForm, BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "profile/profilePage";
         }
 
-         System.out.println("save ok "+ profileForm);
+        userProfileSession.saveForm(profileForm);
         return "redirect:/profile";
     }
 
@@ -36,13 +49,13 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "profile", params = {"addTaste"})
-    public String addRow(ProfileForm profileForm){
+    public String addRow(ProfileForm profileForm) {
         profileForm.getTastes().add(null);
-        return  "profile/profilePage";
+        return "profile/profilePage";
     }
 
     @RequestMapping(value = "/profile", params = {"removeTaste"})
-    public String removeRow(ProfileForm profileForm, HttpServletRequest request){
+    public String removeRow(ProfileForm profileForm, HttpServletRequest request) {
         Integer rowId = Integer.valueOf(request.getParameter("removeTaste"));
         profileForm.getTastes().remove(rowId.intValue());
         return "profile/profilePage";
