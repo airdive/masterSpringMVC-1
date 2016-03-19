@@ -40,7 +40,7 @@ public class ProfileController {
         }
 
         userProfileSession.saveForm(profileForm);
-        return "redirect:/profile";
+        return "redirect:/search/mixed;keywords=" + String.join(",",profileForm.getTastes());
     }
 
     @ModelAttribute("dateFormat")

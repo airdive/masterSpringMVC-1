@@ -26,13 +26,15 @@ public class PictureUploadController {
     private final Resource pictureDir;
     private final Resource anonymousPicture;
     private final MessageSource messageSource;
+    private final UserProfileSession userProfileSession;
 
     @Autowired
     public PictureUploadController(PicturesUploadProperties uploadProperties,
-                                   MessageSource messageSource) {
+                                   MessageSource messageSource, UserProfileSession userProfileSession) {
         pictureDir = uploadProperties.getUploadPath();
         anonymousPicture = uploadProperties.getAnonymousPicture();
         this.messageSource = messageSource;
+        this.userProfileSession = userProfileSession;
     }
 
     @RequestMapping("upload")
@@ -40,37 +42,39 @@ public class PictureUploadController {
         return "profile/uploadPage";
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile", params = {"upload"}, method = RequestMethod.POST)
     public String onUpload(MultipartFile file, RedirectAttributes redirectAttributes,
                            Model model) throws IOException {
 
         if (file.isEmpty() || !isImage(file)) {
             redirectAttributes.addFlashAttribute("error", "Incorrect file. Please upload a picture.");
-            return "redirect:/upload";
+            return "redirect:/profile";
         }
 
         Resource picturePath = copyFileToPictures(file);
-        model.addAttribute("picturePath", picturePath);
+        userProfileSession.setPicturePath(picturePath);
 
-
-        return "profile/uploadPage";
+        return "redirect:profile";
     }
 
     @RequestMapping(value = "/uploadedPicture")
-    public void getUploadedPicture(HttpServletResponse response,
-                                   @ModelAttribute("picturePath") Resource resource) throws IOException {
-        Path path = resource.getFile().toPath();
+    public void getUploadedPicture(HttpServletResponse response) throws IOException {
+        Resource picturePath = userProfileSession.getPicturePath();
+        if (picturePath == null) {
+            picturePath = anonymousPicture;
+        }
         response.setHeader(
                 "Content-Type",
-                URLConnection.guessContentTypeFromName(path.toString())
+                URLConnection.guessContentTypeFromName(picturePath.toString())
         );
-        Files.copy(path, response.getOutputStream());
+        IOUtils.copy(picturePath.getInputStream(), response.getOutputStream());
     }
 
     @RequestMapping("uploadError")
     public ModelAndView onUploadError(Locale locale) {
         ModelAndView modelAndView = new ModelAndView("profile/uploadPage");
         modelAndView.addObject("error", messageSource.getMessage("upload.file.too.big", null, locale));
+        modelAndView.addObject("profileForm", userProfileSession.toForm());
         return modelAndView;
     }
 
@@ -92,15 +96,12 @@ public class PictureUploadController {
         return filename.substring(filename.lastIndexOf("."));
     }
 
-    @ModelAttribute("picturePath")
-    public Resource picturePath() {
-        return anonymousPicture;
-    }
 
     @ExceptionHandler(IOException.class)
     public ModelAndView handleIOException(Locale locale) {
         ModelAndView modelAndView = new ModelAndView("profile/uploadPage");
-        modelAndView.addObject("error", messageSource.getMessage("upload.io.exception",null, locale));
+        modelAndView.addObject("error", messageSource.getMessage("upload.io.exception", null, locale));
+        modelAndView.addObject("profileForm", userProfileSession.toForm());
         return modelAndView;
     }
 
