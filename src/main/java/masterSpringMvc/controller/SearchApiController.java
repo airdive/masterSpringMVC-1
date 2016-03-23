@@ -3,8 +3,6 @@ package masterSpringMvc.controller;
 import masterSpringMvc.search.LightTweet;
 import masterSpringMvc.search.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.twitter.api.SearchParameters;
-import org.springframework.social.twitter.api.Tweet;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +21,6 @@ public class SearchApiController {
     public List<LightTweet> search(@PathVariable String searchType,
                                    @MatrixVariable List<String> keywords) {
 
-        List<SearchParameters> searches = keywords.stream()
-                .map(teste -> cre)
-        return searchService.searchs().stream()
-                .map(params -> twitter.searchOperations());
+        return searchService.search(searchType, keywords);
     }
 }

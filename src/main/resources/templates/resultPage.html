@@ -20,9 +20,9 @@
         <ul class="collection">
             <!--/*@thymesVar id="tweets" type="java.util.Collection<org.springframework.social.twitter.api.Tweet>"*/-->
             <li class="collection-item avatar" th:each="tweet : ${tweets}">
-                <img th:src="${tweet.user.profileImageUrl}" alt=""
+                <img th:src="${tweet.profileImageUrl}" alt=""
                      class="circle"/>
-                <span class="title" th:text="${tweet.user.name}">Username</span>
+                <span class="title" th:text="${tweet.user}">Username</span>
                 <p th:text="${tweet.text}">Tweet message</p>
             </li>
         </ul>
