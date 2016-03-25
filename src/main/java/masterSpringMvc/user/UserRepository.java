@@ -1,5 +1,6 @@
 package masterSpringMvc.user;
 
+import masterSpringMvc.error.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,7 +13,10 @@ public class UserRepository {
 
     private final Map<String, User> userMap = new ConcurrentHashMap<>();
 
-    public User save(String email, User user) {
+    public User update(String email, User user) throws EntityNotFoundException{
+        if (!exists(email)){
+            throw new EntityNotFoundException("User "+email+" cannot be found.");
+        }
         user.setEmail(email);
         return userMap.put(email, user);
     }
