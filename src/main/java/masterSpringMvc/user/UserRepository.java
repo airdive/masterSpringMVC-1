@@ -18,7 +18,8 @@ public class UserRepository {
             throw new EntityNotFoundException("User "+email+" cannot be found.");
         }
         user.setEmail(email);
-        return userMap.put(email, user);
+        userMap.put(email, user);
+        return user;
     }
 
     public User save(User user) {
