@@ -23,15 +23,21 @@ public class UserRepository {
     }
 
     public User save(User user) {
-        return save(user.getEmail(), user);
+        return userMap.put(user.getEmail(), user);
     }
-    public User findOne(String email) {
+    public User findOne(String email) throws EntityNotFoundException {
+        if (!exists(email)){
+            throw new EntityNotFoundException("User "+email+" cannot be found.");
+        }
         return userMap.get(email);
     }
     public List<User> findAll() {
         return new ArrayList<>(userMap.values());
     }
-    public void delete(String email) {
+    public void delete(String email) throws EntityNotFoundException {
+        if (!exists(email)){
+            throw new EntityNotFoundException("User "+email+" cannot be found.");
+        }
         userMap.remove(email);
     }
     public boolean exists(String email) {
